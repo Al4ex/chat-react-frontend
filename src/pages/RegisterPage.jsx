@@ -8,7 +8,7 @@ const RegisterPage = () => {
 
   const [form, setForm] = useState({
     username: "",
-    email: "datos",
+    email: "",
     password: "",
   });
 
@@ -87,7 +87,7 @@ const RegisterPage = () => {
               <input
                 value={form.password}
                 onChange={handleChange}
-                type="text"
+                type="password"
                 className="peer w-full border-2 border-gray-300 placeholder-transparent rounded-xl p-4 mt-1 bg-transparent"
                 placeholder="password"
                 name="password"

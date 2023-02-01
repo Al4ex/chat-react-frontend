@@ -110,7 +110,7 @@ const LoginPage = () => {
                 value={form.password}
                 onChange={handleChange}
                 name="password"
-                type="text"
+                type="password"
                 className="peer w-full border-2 border-gray-300 placeholder-transparent rounded-xl p-4 mt-1 bg-transparent"
                 placeholder="password"
                 id="password"
@@ -137,18 +137,18 @@ const LoginPage = () => {
                   recuerdame
                 </label>
               </div>
-              <button className=" font-medium text-base text-violet-500">
+              {/* <button className=" font-medium text-base text-violet-500">
                 Olvide mi contraseña
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="mt-8 flex flex-col gap-y-8">
             <button className="bg-violet-500 text-white font-bold text-lg py-3 rounded-xl hover:bg-violet-600 active:scale-95 active:duration-200 transition-all hover:scale-105">
               Iniciar
             </button>
-            <button className="flex items-center justify-center active:scale-95 active:duration-200 transition-all hover:scale-105 border-2 border-gray-400 py-3 rounded-xl">
+            {/* <button className="flex items-center justify-center active:scale-95 active:duration-200 transition-all hover:scale-105 border-2 border-gray-400 py-3 rounded-xl">
               ahoy google
-            </button>
+            </button> */}
           </div>
         </form>
         <div className="flex justify-center items-center mt-8 ">
