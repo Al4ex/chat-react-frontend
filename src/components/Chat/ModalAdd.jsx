@@ -1,10 +1,53 @@
-import React from "react";
-
+import React, { useContext, useState } from "react";
+import  toast from "react-hot-toast";
+import * as Yup from 'yup';
+import { SocketContext } from "../../context/SockectContext";
+import { fetchConToken } from "../../helpers/fetch";
+import useAuth from "../../hooks/useAuth";
+import useChat from "../../hooks/useChat";
+import { IoCloseOutline } from "react-icons/io5";
+import { AiOutlineClose } from "react-icons/ai";
+import { types } from "../../types/types";
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Ingrese un correo electrónico válido')
+    .required('El correo electrónico es requerido'),
+  
+});
 const ModalAdd = ({ setModalAdd }) => {
-  const modalData = (e) => {
+  const { dispatch } = useChat();
+  const { auth } = useAuth();
+  const [email, setEmail] = useState('')
+  const { socket } = useContext(SocketContext);
+  const modalData = async (e) => {
     e.preventDefault();
-    console.log("Modal abierto");
+  
+    try {
+      await validationSchema.validate({ email });
+      const response = await fetchConToken('contact', {
+        contact: email,
+        user: auth.email,
+      }, 'POST');
+      handleResponse(response);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+  
+  const handleResponse = (response) => {
+    if (response.success) {
+      toast.success(response.message);
+      setEmail('')
+      setModalAdd(false)
+      socket?.emit("list-users");
+    } else {
+      toast.error(response.message);
+    }
+  };
+  
+
+  
+  
   return (
     <div className="fixed transition-all inset-0 bg-gray-500 w-full left-0 h-screen bg-opacity-75 z-20 justify-between items-start">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 text-center sm:p-0">
@@ -39,20 +82,8 @@ const ModalAdd = ({ setModalAdd }) => {
                   onClick={() => setModalAdd(false)}
                   className="cursor-pointer text-gray-400 hover:text-gray-500"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+
+                  <IoCloseOutline className="w-6 h-6" />
                 </div>
               </div>
               <div className="mt-3 ">
@@ -60,6 +91,8 @@ const ModalAdd = ({ setModalAdd }) => {
                   Correo
                 </label>
                 <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   type="text"
                   name="email"
                   className="w-full inline-flex justify-center rounded-md shadow-sm px-6 py-4 bg-gray-100 font-medium  focus:outline-none "

@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 
 const PublicRoute = () => {
   const { auth } = useAuth();
-  console.log(auth.logged);
+  // console.log(auth.logged);
   return auth.logged ? <Navigate to={"/"} /> : <Outlet />;
 };
 

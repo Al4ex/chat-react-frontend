@@ -71,7 +71,7 @@ const LoginPage = () => {
         setError(false);
       }, 3000);
     }
-    console.log(ok);
+    // console.log(ok);
   };
   return (
     <>

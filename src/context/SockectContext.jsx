@@ -8,6 +8,7 @@ import useAuth from "../hooks/useAuth";
 import useChat from "../hooks/useChat";
 import { useSocket } from "../hooks/useSockect";
 import { types } from "../types/types";
+import { Socket } from "socket.io-client";
 
 export const SocketContext = createContext();
 

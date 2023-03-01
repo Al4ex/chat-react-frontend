@@ -7,11 +7,11 @@ import { SocketContext } from "../../context/SockectContext";
 
 const InboxPeople = () => {
   const { auth, logOut } = useAuth();
-  const windowFocused = useWindowFocus();
+  // const windowFocused = useWindowFocus();
   const { socket } = useContext(SocketContext);
-  useEffect(() => {
-    socket?.emit('focus', windowFocused)
-  }, [windowFocused])
+  // useEffect(() => {
+  //   socket?.emit('focus', windowFocused)
+  // }, [windowFocused])
   
 
   return (
@@ -148,7 +148,9 @@ const InboxPeople = () => {
           <small>Diega</small>
         </div>
       </div> */}
-      <SidebarInbox />
+      <div className=" overflow-auto h-5/6 scrollbar-w-1  scrollbar-track-slate-200 scrollbar-thumb-slate-400 ">
+        <SidebarInbox />
+      </div>
     </>
   );
 };

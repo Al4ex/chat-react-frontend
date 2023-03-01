@@ -9,9 +9,11 @@ import useUi from "../../hooks/useUi";
 import useAuth from "../../hooks/useAuth";
 import { SocketContext } from "../../context/SockectContext";
 import useWindowFocus from "use-window-focus";
+import { newDate } from "../../helpers/date";
 
 const SideChatItem = ({ user }) => {
-  const windowFocused = useWindowFocus();
+  console.log(user);
+  // const windowFocused = useWindowFocus();
   const { socket } = useContext(SocketContext);
   const { auth } = useAuth();
   const { setGlobalChat } = useUi();
@@ -25,6 +27,7 @@ const SideChatItem = ({ user }) => {
     });
     const resp = await fetchConToken(`message/${user._id}`);
 
+    console.log(resp, 'load');
     dispatch({
       type: types.loadMessages,
       payload: resp.messages,
@@ -44,14 +47,14 @@ const SideChatItem = ({ user }) => {
 
     // mover scroll|
   };
-  useEffect(() => {
-    if (chatActive == user._id && windowFocused) {
-      socket?.emit("read-messages", {
-        from: user._id,
-        to: auth.uid,
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (chatActive == user._id && windowFocused) {
+  //     socket?.emit("read-messages", {
+  //       from: user._id,
+  //       to: auth.uid,
+  //     });
+  //   }
+  // }, []);
 
   useEffect(() => {
     scrollWithOut("bottom");
@@ -86,12 +89,12 @@ const SideChatItem = ({ user }) => {
               {user.username}
             </p>
           </div>
-          <small className="font-light text-sm text-gray-700">9:55am</small>
+          <small className="font-light text-sm text-gray-700">{user.state ? 'En linea' : newDate(user.ultimaConexion)}</small>
         </div>
         <small className="overflow-ellipsis overflow-hidden text-base whitespace-nowrap block font-light text-gray-500">
-         {/*  {user.lastMsg.map((msglast) => (
-            <Fragment key={msglast._id}>{msglast.msg}</Fragment>
-          ))} */}
+          {/* {user.mensajes.msg((msglast) => ( */}
+            <Fragment key={user.ultimoMensaje.msg}>{user.ultimoMensaje.msg}</Fragment>
+          {/* ))} */}
         </small>
       </div>
 

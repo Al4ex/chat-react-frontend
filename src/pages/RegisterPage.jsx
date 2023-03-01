@@ -35,7 +35,7 @@ const RegisterPage = () => {
       // }, 3000);
       console.log(error);
     }
-    console.log(ok);
+    // console.log(ok);
   };
   return (
     <>
