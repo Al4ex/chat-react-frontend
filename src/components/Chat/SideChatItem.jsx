@@ -10,9 +10,11 @@ import useAuth from "../../hooks/useAuth";
 import { SocketContext } from "../../context/SockectContext";
 import useWindowFocus from "use-window-focus";
 import { newDate } from "../../helpers/date";
+import moment from "moment/moment";
+import 'moment/locale/es';
 
 const SideChatItem = ({ user }) => {
-  console.log(user);
+  moment.locale('es');
   // const windowFocused = useWindowFocus();
   const { socket } = useContext(SocketContext);
   const { auth } = useAuth();
@@ -27,7 +29,6 @@ const SideChatItem = ({ user }) => {
     });
     const resp = await fetchConToken(`message/${user._id}`);
 
-    console.log(resp, 'load');
     dispatch({
       type: types.loadMessages,
       payload: resp.messages,
@@ -47,6 +48,27 @@ const SideChatItem = ({ user }) => {
 
     // mover scroll|
   };
+  const getDateFormat = () => {
+    const lastConnect = moment(user.ultimaConexion);
+    const now = moment();
+    const yesterday = moment().subtract(1, 'day');
+    const diffDays = now.diff(lastConnect, 'days');
+  
+    if (user.state) {
+      return 'En línea';
+    }
+  
+    if (lastConnect.isSame(now, 'day')) {
+      return `últ. vez hoy a las ${lastConnect.format("HH:mm a")}`;
+    } else if (lastConnect.isSame(yesterday, 'day')) {
+      return `últ. vez ayer a las ${lastConnect.format("HH:mm a")}`;
+    } else if (diffDays > -3) {
+      return `últ. vez el ${lastConnect.format('dddd')} a las ${lastConnect.format('HH:mm a')}`;
+    } else {
+      return `últ. vez el ${lastConnect.format('DD/MM/YYYY')} a las ${lastConnect.format('HH:mm a')}`;
+    }
+  };
+  
   // useEffect(() => {
   //   if (chatActive == user._id && windowFocused) {
   //     socket?.emit("read-messages", {
@@ -59,7 +81,6 @@ const SideChatItem = ({ user }) => {
   useEffect(() => {
     scrollWithOut("bottom");
   }, [hadleClick]);
-  // console.log(user.message.filter((filter) => auth.uid === filter.to).length);
   return (
     <div
       onClick={hadleClick}
@@ -89,24 +110,13 @@ const SideChatItem = ({ user }) => {
               {user.username}
             </p>
           </div>
-          <small className="font-light text-sm text-gray-700">{user.state ? 'En linea' : newDate(user.ultimaConexion)}</small>
+          <small className="font-light text-sm text-gray-700">{getDateFormat()}</small>
         </div>
         <small className="overflow-ellipsis overflow-hidden text-base whitespace-nowrap block font-light text-gray-500">
-          {/* {user.mensajes.msg((msglast) => ( */}
-            <Fragment key={user.ultimoMensaje.msg}>{user.ultimoMensaje.msg}</Fragment>
-          {/* ))} */}
+            <Fragment key={user.ultimoMensaje?.msg}>{user.ultimoMensaje?.msg}</Fragment>
         </small>
       </div>
 
-      {/* {user.message.filter((filter) => auth.uid === filter.to).length > 0 ? (
-        <div className="absolute h-7 text-sm text-center text-white font-semibold w-7 rounded-full right-0 top-0 bg-blue-500 p-1 border-gray-100  border">
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            {user.message.filter((filter) => auth.uid === filter.to).length}
-          </span>
-        </div>
-      ) : (
-        ""
-      )} */}
     </div>
   );
 };

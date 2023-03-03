@@ -14,7 +14,7 @@ function App() {
       <AuthProvider>
         <SocketProvider>
           <UiProvider>
-            {/* <Toaster/> */}
+            <Toaster/>
             <AppRouter />
           </UiProvider>
         </SocketProvider>

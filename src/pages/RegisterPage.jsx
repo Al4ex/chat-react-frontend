@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalError from "../components/ModalError";
 import useAuth from "../hooks/useAuth";
+import * as Yup from 'yup';
+import toast from "react-hot-toast";
 
+const validationSchema = Yup.object().shape({
+  password: Yup.string()
+    .required('La contraseña es requerida'),
+  email: Yup.string()
+    .email('Ingrese un correo electrónico válido')
+    .required('El correo electrónico es requerido'),
+  username: Yup.string()
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .required('El nombre es requerido'),
+  
+})
 const RegisterPage = () => {
   const { register, error, setError } = useAuth();
 
@@ -22,21 +35,29 @@ const RegisterPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Llamar al backend
     const { username, email, password } = form;
 
-    const ok = await register(username, email, password);
-    if (!ok) {
-      setError(true);
+    // Llamar al backend
+    try {
+      // await validationSchema.validate({ email:formValues.email, name: formValues.name , message: formValues.message }, { abortEarly: false })
+      await validationSchema.validate({ email, password, username })
 
-      // setTimeout(() => {
-      //   setError(false);
-      // }, 3000);
-      console.log(error);
+      await register(username, email, password);
+    
+        // la validación ha sido exitosa, podemos enviar el formulario
+    } catch (error) {
+      toast.error(error.message);
+
     }
+
+    
     // console.log(ok);
   };
+  useEffect(() => {
+    console.log(form);
+
+  }, [])
+  
   return (
     <>
       {error && <ModalError />}
@@ -45,7 +66,7 @@ const RegisterPage = () => {
         <p className="font-medium text-lg text-gray-500 mt-4">
           Vamos a iniciar poniendo tus datos
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className="mt-8">
             <div className="relative">
               <input
@@ -95,8 +116,8 @@ const RegisterPage = () => {
               />
               <label
                 htmlFor="password"
-                className="absolute cursor-text select-none  -top-7 left-0  peer-placeholder-shown:text-gray-400  peer-placeholder-shown:text-base peer-placeholder-shown:top-[1.4rem] peer-placeholder-shown:left-[1.12rem]  peer-placeholder-shown:font-normal  font-medium text-lg transition-all duration-100
-              peer-focus:-top-7 peer-focus:text-gray-700 peer-focus:font-medium peer-focus:left-0 peer-focus:text-lg"
+                className={`absolute cursor-text select-none  -top-7 left-0  peer-placeholder-shown:text-gray-400  peer-placeholder-shown:text-base peer-placeholder-shown:top-[1.4rem] peer-placeholder-shown:left-[1.12rem]  peer-placeholder-shown:font-normal  font-medium text-lg transition-all duration-100
+              peer-focus:-top-7  peer-focus:text-lg ${form.password ? "peer-focus:text-gray-700 peer-focus:font-medium peer-focus:left-0" : ''} peer-focus:text-gray-700 peer-focus:font-medium peer-focus:left-0`}
               >
                 Password
               </label>

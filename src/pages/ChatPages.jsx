@@ -26,7 +26,7 @@ const ChatPages = () => {
   return (
     // <section className="h-screen flex overflow-hidden">
     <section className="h-screen flex flex-col md:flex-row bg-gray-50 overflow-hidden">
-      <Toaster/>
+      {/* <Toaster/> */}
       <SectionMenu />
       {/* <div className="bg-white w-full flex-grow p-6"> */}
       <SectionInbox/>

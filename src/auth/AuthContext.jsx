@@ -44,6 +44,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("token", resp.jwt);
       const { response } = resp;
 
+      console.log(resp);
       setAuth({
         uid: response.uid,
         checking: false,
